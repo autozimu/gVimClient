@@ -12,9 +12,9 @@ namespace gVimClient
     {
         static void Main(string[] args)
         {
-            string vimbin = LocateVimBin();
+            string gvimbin = LocategVimBin();
 
-            if (vimbin == null)
+            if (gvimbin == null)
             {
                 Debug.WriteLine("gVimClient: no vim binary found.");
                 return;
@@ -22,9 +22,19 @@ namespace gVimClient
 
             if (args.Length == 0)
             {
-                Debug.WriteLine($"gVimClient: {vimbin}");
-                Process.Start(vimbin);
-            }
+				if (IsVimInstanceExist(gvimbin))
+				{
+					string opts = "--remote-send <Esc>:tabnew<CR>";
+					Debug.WriteLine($"gVimClient: {gvimbin} {opts}");
+					Process.Start(gvimbin, opts);
+				}
+				else
+				{
+					Debug.WriteLine($"gVimClient: {gvimbin}");
+					Process.Start(gvimbin);
+				}
+
+			}
             else
             {
                 string opts = "--remote-tab-silent";
@@ -32,12 +42,12 @@ namespace gVimClient
                 {
                     opts += $" \"{arg}\"";
                 }
-                Debug.WriteLine($"gVimClient: {vimbin} {opts}");
-                Process.Start(vimbin, opts);
+                Debug.WriteLine($"gVimClient: {gvimbin} {opts}");
+                Process.Start(gvimbin, opts);
             }
         }
 
-        static string LocateVimBin()
+        static string LocategVimBin()
         {
             string[] locations = new string[]
             {
@@ -55,5 +65,29 @@ namespace gVimClient
 
             return null;
         }
+
+		static bool IsVimInstanceExist(string gvimbin)
+		{
+			string vimbin = gvimbin.ReplaceLastOccurrence("gvim.exe", "vim.exe");
+
+			Process p = new Process();
+			p.StartInfo.FileName = vimbin;
+			p.StartInfo.Arguments = "--serverlist";
+			p.StartInfo.UseShellExecute = false;
+			p.StartInfo.RedirectStandardOutput = true;
+			p.Start();
+
+			string stdout = p.StandardOutput.ReadToEnd();
+			p.WaitForExit();
+
+			if (string.IsNullOrWhiteSpace(stdout))
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
     }
 }
