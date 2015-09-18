@@ -73,8 +73,9 @@ namespace gVimClient
 			Process p = new Process();
 			p.StartInfo.FileName = vimbin;
 			p.StartInfo.Arguments = "--serverlist";
-			p.StartInfo.UseShellExecute = false;
 			p.StartInfo.RedirectStandardOutput = true;
+			p.StartInfo.UseShellExecute = false;
+			p.StartInfo.CreateNoWindow = true;
 			p.Start();
 
 			string stdout = p.StandardOutput.ReadToEnd();
