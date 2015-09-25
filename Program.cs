@@ -22,9 +22,8 @@ namespace gVimClient
 
             if (args.Length == 0)
             {
-                string opts = "--remote-send <Esc>:tabnew<CR>";
-                Debug.WriteLine($"gVimClient: {gvimbin} {opts}");
-                Process.Start(gvimbin, opts);
+                Debug.WriteLine($"gVimClient: {gvimbin}");
+                Process.Start(gvimbin);
             }
             else
             {
