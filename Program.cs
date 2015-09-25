@@ -22,19 +22,10 @@ namespace gVimClient
 
             if (args.Length == 0)
             {
-				if (IsVimInstanceExist(gvimbin))
-				{
-					string opts = "--remote-send <Esc>:tabnew<CR>";
-					Debug.WriteLine($"gVimClient: {gvimbin} {opts}");
-					Process.Start(gvimbin, opts);
-				}
-				else
-				{
-					Debug.WriteLine($"gVimClient: {gvimbin}");
-					Process.Start(gvimbin);
-				}
-
-			}
+                string opts = "--remote-send <Esc>:tabnew<CR>";
+                Debug.WriteLine($"gVimClient: {gvimbin} {opts}");
+                Process.Start(gvimbin, opts);
+            }
             else
             {
                 string opts = "--remote-tab-silent";
@@ -65,30 +56,5 @@ namespace gVimClient
 
             return null;
         }
-
-		static bool IsVimInstanceExist(string gvimbin)
-		{
-			string vimbin = gvimbin.ReplaceLastOccurrence("gvim.exe", "vim.exe");
-
-			Process p = new Process();
-			p.StartInfo.FileName = vimbin;
-			p.StartInfo.Arguments = "--serverlist";
-			p.StartInfo.RedirectStandardOutput = true;
-			p.StartInfo.UseShellExecute = false;
-			p.StartInfo.CreateNoWindow = true;
-			p.Start();
-
-			string stdout = p.StandardOutput.ReadToEnd();
-			p.WaitForExit();
-
-			if (string.IsNullOrWhiteSpace(stdout))
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
-		}
     }
 }
