@@ -36,8 +36,7 @@ namespace gVimClient
         {
             string[] locations = new string[]
             {
-                @"C:\Program Files\Vim\gvim.exe",
-                @"C:\Program Files (x86)\Vim\gvim.exe",
+                @"C:\Program Files\Vim\vim74\gvim.exe",
             };
 
             foreach (string loc in locations)
