@@ -1,5 +1,8 @@
-﻿using System.Diagnostics;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace gVimClient
 {
@@ -22,13 +25,29 @@ namespace gVimClient
             }
             else
             {
-                string opts = "--remote-tab-silent";
+                // Insert --remote-tab-silent argument.
+                List<string> argsList = new List<string>(args);
+                int modifierIdx = 0;
+                if (argsList.Exists(a => a.StartsWith("-")))
+                {
+                    modifierIdx = argsList.FindLastIndex(a => a.StartsWith("-"));
+                }
+                argsList.Insert(modifierIdx, "--remote-tab-silent");
+
+                StringBuilder optsBuilder = new StringBuilder();
                 foreach (string arg in args)
                 {
-                    opts += $" \"{arg}\"";
+                    optsBuilder.Append(arg).Append(" ");
                 }
+
+                string opts = optsBuilder.ToString();
                 Debug.WriteLine($"gVimClient: {gvimbin} {opts}");
-                Process.Start(gvimbin, opts);
+
+                Process proc = Process.Start(gvimbin, opts);
+                if (argsList.Contains("-f"))
+                {
+                    proc.WaitForExit();
+                }
             }
         }
 
