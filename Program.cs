@@ -37,7 +37,14 @@ namespace gVimClient
                 StringBuilder optsBuilder = new StringBuilder();
                 foreach (string arg in args)
                 {
-                    optsBuilder.Append(arg).Append(" ");
+                    if (arg.StartsWith("-"))
+                    {
+                        optsBuilder.Append($"{arg} ");
+                    }
+                    else
+                    {
+                        optsBuilder.Append($"\"{arg}\" ");
+                    }
                 }
 
                 string opts = optsBuilder.ToString();
